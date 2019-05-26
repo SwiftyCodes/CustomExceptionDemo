@@ -10,16 +10,42 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var emailIDTextField:UITextField!
+    @IBOutlet weak var paswordTextField:UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func loginButtonAction(_ sender:UIButton) {
+        do{
+                try login()
+        }catch LoginCustomError.invalidForm {
+            print("Please fill all entries")
+        }catch LoginCustomError.invalidEmailID {
+            print("Email ID is not valid")
+        }catch LoginCustomError.invalidPassword {
+            print("Pasword is not valid")
+        }catch {
+            print("Login had an error!")
+        }
     }
-
-
+    
+    func login() throws {
+        let email = emailIDTextField.text
+        let password = paswordTextField.text
+        
+        if (email?.isEmpty)! || (password?.isEmpty)! {
+            throw LoginCustomError.invalidForm
+        }
+        if !Validation.isValidEmail(testStr: email!){
+            throw LoginCustomError.invalidEmailID
+        }
+        if (password?.count)!<8 {
+            throw LoginCustomError.invalidPassword
+        }
+        
+        print("Success!")
+    }
 }
 
